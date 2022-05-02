@@ -21,6 +21,7 @@ api = ApiAsync(service_name='TELEGRAMBOT',
                schema=test_schema)
 
 
+@api.callback_func(name="test_callback")
 async def process_callback(message: CallbackMessage):
     # Все методы обработчики должны принимать аргумент с типом IncomingMessage
     # и возвращать либо None, либо CallbackMessage.
@@ -29,9 +30,6 @@ async def process_callback(message: CallbackMessage):
     # И отправляем ответ пользователю
     user_id = message.incoming_message.additional_data['user_id']
     await bot.send_message(user_id, text=f'Сообщение обработано: {message.response}')
-
-# Устанавливаем методы для обработки колбека
-api.methods_callback = {'test_callback': process_callback}
 
 
 @dp.message_handler(commands=['send_thirdservice'])

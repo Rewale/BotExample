@@ -1,3 +1,5 @@
+import random
+
 import asyncio
 
 from aiogram import Bot, types
@@ -18,7 +20,7 @@ api = ApiAsync(service_name='TELEGRAMBOT',
                user_api='guest',
                pass_api='guest',
                redis_url='redis://localhost',
-               schema=test_schema)
+               schema=test_schema, is_test=False)
 
 
 @api.callback_func(name="test_callback")
@@ -38,12 +40,13 @@ async def process_start_command(message: types.Message):
     # записываем доп. информацию в редис(она будет доступна после при
     # обработке)
     # callback_method_name - метод из словаря api.methods_callback
+    rand_int = str(random.randint(0, 3000))
     await api.send_request_api('test_method',
-                               [InputParam('test_str', '2222')],
+                               [InputParam('test_str', rand_int)],
                                callback_method_name='test_callback',
                                requested_service='THIRDSERVICE',
                                additional_data={'user_id': message.chat.id})
-    await message.reply("Отправка в THIRDSERVICE")
+    await message.reply(f"Отправка в THIRDSERVICE: {rand_int}")
 
 
 @dp.message_handler()

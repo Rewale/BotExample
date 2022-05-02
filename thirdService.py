@@ -1,4 +1,5 @@
 """ Код стороннего сервиса с задержкой в отправке сообщения в 5 секунд """
+import datetime
 from time import sleep
 
 
@@ -11,7 +12,8 @@ def method(message: IncomingMessage) -> CallbackMessage:
     # Все методы обработчики должны принимать аргумент с типом IncomingMessage
     # и возвращать либо None, либо CallbackMessage
     sleep(5)
-    return message.callback_message(param={'answer': message.params['test_str']*2}, result=True)
+    return message.callback_message(param={'answer': message.params['test_str']*2, 'date': datetime.datetime.now()},
+                                    result=True)
 
 
 api = ApiSync('THIRDSERVICE',
